@@ -59,14 +59,13 @@ temporary value pending your putting in appropriate ones.)
 module Math : MATH =
   struct
     let pi = 3.1415926535897932384626433832795
-    let cos (x : float) : float = cos x
-    let sin (x : float) : float = sin x
-    let sum (x : float) (y : float) : float = x +. y
+    let cos : float -> float = cos
+    let sin : float -> float = sin
+    let sum : float -> float -> float = (+.)
     let max (lst : float list) : float option =
       match lst with
       | [] -> None
-      | _ -> Some
-        (List.fold_left (fun x acc -> max x acc) min_float lst)
+      | h :: t -> Some (List.fold_left max h t)
   end ;;
 
 (*......................................................................
@@ -76,7 +75,7 @@ type float option. Name the resulting value "result". (Do not use a
 local open for this exercise.)
 ......................................................................*)
 
-let result = Math.max [Math.cos Math.pi, Math.sin Math.pi] ;;
+let result = Math.max [Math.cos Math.pi; Math.sin Math.pi] ;;
 
 (*......................................................................
 Exercise 1C: Reimplement the computation from 1B above, now as
@@ -84,4 +83,6 @@ Exercise 1C: Reimplement the computation from 1B above, now as
 in a more succinct manner.
 ......................................................................*)
 
-let result_local_open = Some nan ;;
+let result_local_open =
+  let open Math in
+    max [cos pi; sin pi] ;;
